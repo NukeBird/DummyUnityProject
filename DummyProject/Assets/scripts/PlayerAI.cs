@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PlayerAI : MonoBehaviour
 {
-    private Animator animator;
+    public Animator animator;
     private float wait_time = 0;
 
 	// Use this for initialization
@@ -16,6 +16,9 @@ public class PlayerAI : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
     {
+        if (animator == null)
+            return;
+
         var current_state = animator.GetCurrentAnimatorStateInfo(0);
 
         if (current_state.IsName("WAIT00"))
