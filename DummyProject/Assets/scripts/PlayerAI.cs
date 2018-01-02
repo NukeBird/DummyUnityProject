@@ -4,14 +4,17 @@ using UnityEngine;
 
 public class PlayerAI : MonoBehaviour
 {
-    public Animator animator;
-    private float wait_time = 0;
+    Animator animator;
+    public float max_wait_time = 4f;
+    float wait_time = 0;
+    int superwait_anim;
 
-	// Use this for initialization
-	void Start ()
+    // Use this for initialization
+    void Start ()
     {
         animator = GetComponent<Animator>();
-	}
+        superwait_anim = Random.Range(1, 4);
+    }
 	
 	// Update is called once per frame
 	void Update ()
@@ -25,10 +28,11 @@ public class PlayerAI : MonoBehaviour
         {
             wait_time += Time.deltaTime;
 
-            if (wait_time > 4)
+            if (wait_time > max_wait_time)
             {
-                animator.Play("WAIT0" + Random.Range(1, 4).ToString());
+                animator.Play("WAIT0" + superwait_anim.ToString());
                 wait_time = 0;
+                superwait_anim = (++superwait_anim - 1) % 4 + 1;
             }
         }
 	}
