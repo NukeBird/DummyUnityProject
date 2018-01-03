@@ -4,36 +4,46 @@ using UnityEngine;
 
 public class PlayerAI : MonoBehaviour
 {
+    public float rotation_speed = 90;
     Animator animator;
-    public float max_wait_time = 4f;
-    float wait_time = 0;
-    int superwait_anim;
+    Rigidbody rb;
+    int speed_hash = Animator.StringToHash("Speed");
+    int jump_hash = Animator.StringToHash("Jump");
+    int jump_state_hash = Animator.StringToHash("Base Layer.Jump");
+    //Vector3 forward_vector;
 
-    // Use this for initialization
-    void Start ()
+	// Use this for initialization
+	void Start ()
     {
         animator = GetComponent<Animator>();
-        superwait_anim = Random.Range(1, 4);
+        rb = GetComponent<Rigidbody>();
+        //forward_vector = transform.rotation * Vector3.forward;
+	}
+
+    Vector3 GetForward()
+    {
+        return transform.worldToLocalMatrix.MultiplyVector(transform.forward);
     }
 	
 	// Update is called once per frame
 	void Update ()
     {
-        if (animator == null)
-            return;
+        float speed = Input.GetAxis("Vertical");
 
-        var current_state = animator.GetCurrentAnimatorStateInfo(0);
+        animator.SetFloat(speed_hash, speed);
 
-        if (current_state.IsName("WAIT00"))
-        {
-            wait_time += Time.deltaTime;
+        var info = animator.GetAnimatorTransitionInfo(0);
 
-            if (wait_time > max_wait_time)
-            {
-                animator.Play("WAIT0" + superwait_anim.ToString());
-                wait_time = 0;
-                superwait_anim = (++superwait_anim - 1) % 4 + 1;
-            }
+        if (Input.GetKeyDown(KeyCode.Space) && 
+            info.nameHash != jump_state_hash)
+        { 
+            animator.SetTrigger(jump_hash);
         }
-	}
+        float rotation = Input.GetAxis("Horizontal") * rotation_speed;
+
+        //rb.velocity = forward_vector * speed * 125 * Time.smoothDeltaTime;
+        rb.transform.Rotate(Vector3.up, rotation * Time.smoothDeltaTime);
+        rb.transform.Translate(new Vector3(-speed * 10f * Time.smoothDeltaTime, 0, 0));
+
+    }
 }
