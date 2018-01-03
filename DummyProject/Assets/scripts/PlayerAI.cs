@@ -43,7 +43,6 @@ public class PlayerAI : MonoBehaviour
 
         //rb.velocity = forward_vector * speed * 125 * Time.smoothDeltaTime;
         rb.transform.Rotate(Vector3.up, rotation * Time.smoothDeltaTime);
-        rb.transform.Translate(new Vector3(-speed * 10f * Time.smoothDeltaTime, 0, 0));
-
+        rb.transform.Translate(new Vector3(-speed * 3.5f * Time.smoothDeltaTime, 0, 0));
     }
 }
